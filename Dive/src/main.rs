@@ -48,8 +48,6 @@ fn main() {
     let contents = fs::read_to_string("input.txt").expect("Something went wrong reading the file");
     let mut sub = submarine::new();
     let mut advSub = advSub::new();
-    let error = fs::read_to_string("error.txt").expect("Something went wrong reading the file");
-    let mut error_vec = Vec::new();
 
 
     for line in contents.lines() {
@@ -74,11 +72,41 @@ fn main() {
 
 
         }
+
+    println!("{}", advSub.multiply_by_depth());
+    day_three();
+
+
+
+}
+
+fn day_three() {
+    let error = fs::read_to_string("error.txt").expect("Something went wrong reading the file");
+
+    let mut error_vec:Vec<String> = Vec::new();
+    let  mut gamma = String::from("");
+    let mut epilson = String::from("");
     for line in error.lines(){
-        error_vec.push(line.parse::<binary>().unwrap());
+        error_vec.push(line.parse().unwrap());
 
     }
-    println!("{}", advSub.multiply_by_depth());
-    println!("{}", advSub.aim *advSub.horizontal);
-    println!("{:?}", error_vec);
+    for i in 0..12{
+        let mut count = 0;
+        for string in error_vec.iter() {
+            if string.chars().nth(i).unwrap() == '1' {
+                count += 1;
+            }
+        }
+        if(count >= error_vec.len()/2){
+            gamma.push('1');
+            epilson.push('0');
+        }else{
+            gamma.push('0');
+            epilson.push('1');
+        }
+    }
+    let gamma = isize::from_str_radix(&gamma, 2).unwrap();
+    let epilson = isize::from_str_radix(&epilson, 2).unwrap();
+    println!("{:?}", gamma * epilson);
+
 }
