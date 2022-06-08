@@ -1,16 +1,14 @@
 use std::fs;
-use regex::Regex;
-struct submarine{
+struct Submarine {
     forward: f64,
     down: f64,
     up: f64,
 
 }
-impl submarine {
-    fn new() -> submarine {
-        submarine {
-            forward: 0.0,
-            down: 0.0,
+impl Submarine {
+    fn new() -> Submarine {
+        Submarine {
+            forward: 0.0,git
             up: 0.0,
         }
     }
@@ -19,14 +17,14 @@ impl submarine {
         (self.up - self.down) * self.forward
     }
 }
-struct advSub {
+struct AdvSub {
     aim: f64,
     horizontal: f64,
     depth: f64,
 }
-impl advSub {
-    fn new() -> advSub {
-        advSub {
+impl AdvSub {
+    fn new() -> AdvSub {
+        AdvSub {
             aim: 0.0,
             horizontal: 0.0,
             depth: 0.0,
@@ -35,19 +33,13 @@ impl advSub {
     fn multiply_by_depth(&self) -> f64 {
         self.horizontal * self.depth
     }
-
-
-    fn decode_error(){
-        unimplemented!()
-    }
-
 }
 
 
 fn main() {
     let contents = fs::read_to_string("input.txt").expect("Something went wrong reading the file");
-    let mut sub = submarine::new();
-    let mut advSub = advSub::new();
+    let mut sub = Submarine::new();
+    let mut adv_sub = AdvSub::new();
 
 
     for line in contents.lines() {
@@ -55,16 +47,16 @@ fn main() {
         match split_vec[0]{
             "forward" => {
                 sub.forward += split_vec[1].parse::<f64>().unwrap();
-                advSub.horizontal += split_vec[1].parse::<f64>().unwrap();
-                advSub.depth += split_vec[1].parse::<f64>().unwrap() * advSub.aim;
+                adv_sub.horizontal += split_vec[1].parse::<f64>().unwrap();
+                adv_sub.depth += split_vec[1].parse::<f64>().unwrap() * adv_sub.aim;
                 },
             "down" => {
                 sub.down += split_vec[1].parse::<f64>().unwrap();
-                advSub.aim += (split_vec[1].parse::<f64>().unwrap());
+                adv_sub.aim += split_vec[1].parse::<f64>().unwrap();
             },
             "up" => {
                 sub.up += split_vec[1].parse::<f64>().unwrap();
-                advSub.aim -= split_vec[1].parse::<f64>().unwrap() ;
+                adv_sub.aim -= split_vec[1].parse::<f64>().unwrap() ;
             },
 
             _ => panic!("Unknown Direction"),
@@ -72,8 +64,8 @@ fn main() {
 
 
         }
-
-    println!("{}", advSub.multiply_by_depth());
+    println!("{}", sub.calculate_location());
+    println!("{}", adv_sub.multiply_by_depth());
     day_three();
 
 
@@ -90,14 +82,15 @@ fn day_three() {
         error_vec.push(line.parse().unwrap());
 
     }
-    for i in 0..12{
+    let length = error_vec[0].len();
+    for i in 0..length{
         let mut count = 0;
         for string in error_vec.iter() {
             if string.chars().nth(i).unwrap() == '1' {
                 count += 1;
             }
         }
-        if(count >= error_vec.len()/2){
+        if count >= error_vec.len()/2{
             gamma.push('1');
             epilson.push('0');
         }else{
